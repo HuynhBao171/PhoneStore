@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dịch vụ sửa chữa</title>
+  <link rel="stylesheet" href="../static/css/style.css" />
+  <link rel="stylesheet" type="text/css" href="/webjars/bootstrap/css/bootstrap.min.css" />
+  <script type="text/javascript" src="/webjars/jquery/jquery.min.js"></script>
+  <script type="text/javascript" src="/webjars/bootstrap/js/bootstrap.min.js"></script>
+  <style>
+    main {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    section {
+        margin-bottom: 30px;
+    }
+
+        section h2 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            font-weight: bold;
+            text-decoration: underline;
+        }
+
+        section p {
+            font-size: 20px;
+            width: 100%;
+        }
+
+        section ul {
+            margin-top: 10px;
+        }
+</style>
+</head>
+<body>
+<th:block th:replace="~{layout :: header}"></th:block>
+<img src="../static/images/logo_banner.jpg" width="400px" style="position:relative; left:30%; margin-top:30px" />
+<main>
+  <section>
+    <h2> Đội ngũ nhân viên chuyên nghiệp</h2>
+    <p> - Chúng tôi tự hào có đội ngũ nhân viên chuyên nghiệp, giàu kinh nghiệm trong lĩnh vực sửa chữa điện thoại. Tất cả các nhân viên đều được đào tạo và có chứng chỉ kỹ thuật viên chuyên nghiệp để đảm bảo chất lượng dịch vụ tốt nhất cho khách hàng.</p>
+    <p> - Chúng tôi cam kết sẽ giúp khách hàng giải quyết các vấn đề về điện thoại một cách nhanh chóng và hiệu quả nhất.</p>
+  </section>
+  <img src="../static/images/banner_dvsc.jpg" width="810px" height="500px" />
+  <section>
+    <h2> Chuyên viên kĩ thuật chuyên nghiệp</h2>
+    <p> - Chúng tôi có đội ngũ chuyên viên kĩ thuật chuyên nghiệp, có nhiều kinh nghiệm trong việc sửa chữa các lỗi phần cứng và phần mềm của điện thoại Pi-A.</p>
+    <p> - Chuyên viên kĩ thuật của chúng tôi có khả năng sửa chữa các lỗi như màn hình bể, pin chai, phần mềm bị lỗi và nhiều hơn nữa. Chúng tôi sử dụng các công cụ và thiết bị chuyên dụng để đảm bảo việc sửa chữa được thực hiện một cách chính xác và an toàn nhất.</p>
+  </section>
+  <div style="display:flex">
+    <img src="../static/images/banner_dvsc2.jpg" width="400px" height="300px" />
+    <img style="margin-left:10px" src="../static/images/nvsc.jpg" width="400px" height="300px" />
+  </div>
+  <section>
+    <h2>Liên hệ</h2>
+    <p> - Nếu bạn có bất kỳ câu hỏi hoặc yêu cầu nào, hãy liên hệ với chúng tôi thông qua:</p>
+    <ul>
+      <li>11/07 Biên Hòa, Đồng Nai</li>
+      <li>Email: vinhtranthe117@gmail.com or 3621132na@gmail.com</li>
+      <li>Điện thoại: 0935851107</li>
+    </ul>
+  </section>
+</main>
+<th:block th:replace="~{layout :: footer}"></th:block>
+</body>
+</html>

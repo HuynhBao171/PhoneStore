@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <link rel="stylesheet" href="../static/css/style.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" type="text/css" href="/webjars/bootstrap/css/bootstrap.min.css" />
+  <script type="text/javascript" src="/webjars/jquery/jquery.min.js"></script>
+  <script type="text/javascript" src="/webjars/bootstrap/js/bootstrap.min.js"></script>
+  <title>Danh sách loại điện thoại</title>
+  <!--    <th:block th:replace="~{layout::link-css}"></th:block>-->
+  <!--    <th:block th:replace="~{layout::custom-css}"></th:block>-->
+  <style>
+    nav {
+      display:flex;
+      justify-content: center;
+    }
+    nav ul li {
+      margin-right: 20px;
+    }
+    .btn {
+      margin-bottom:20px;
+    }
+  </style>
+</head>
+<body>
+<th:block th:replace="~{layout::header}"></th:block>
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      <nav class="navbar navbar-light">
+        <div class="container-fluid">
+          <h2>Danh sách loại điện thoại</h2>
+          <form class="d-flex" th:action="@{/loaidienthoais/search}"
+                method="get">
+            <input class="form-control me-2" type="search"
+                   placeholder="Search" aria-label="Search" name="keyword">
+            <button class="btn btn-outline-success"
+                    type="submit">Search</button>
+          </form>
+        </div>
+      </nav>
+    </div>
+  </div>
+  <a class="btn btn-primary" th:href="@{/loaidienthoais/add}">Thêm mới loại điện thoại</a>
+  <table class="table">
+    <thead>
+    <tr>
+      <th><a th:href="@{/loaidienthoais(pageNo=${currentPage}, sortBy='id')}">Id</a></th>
+      <th><a th:href="@{/loaidienthoais(pageNo=${currentPage}, sortBy='tenLoai')}">Tên loại điện thoại</a></th>
+      <th><a th:href="@{/loaidienthoais(pageNo=${currentPage}, sortBy='trangThai')}">Trạng thái</a></th>
+      <th>Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="loaidienthoai : ${loaidienthoais}">
+      <td th:text="${loaidienthoai.getId()}"></td>
+      <td th:text="${loaidienthoai.getTenLoai()}"></td>
+      <td>
+        <input type="checkbox" th:checked="${loaidienthoai.getTrangThai()}" disabled="disabled" />
+      </td>
+
+      <td colspan="2">
+        <a class="btn btn-primary"
+           th:href="@{/loaidienthoais/edit/{id}(id=${loaidienthoai.getId()})}">Edit</a>
+        <a class="btn btn-danger"
+           th:href="@{/loaidienthoais/delete/{id}(id=${loaidienthoai.getId()})}"
+           th:if="${loaidienthoai.getTrangThai() == false}"
+           onclick="return confirm('Are you sure you want to delete this loaidienthoai?')">Delete</a>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+<nav aria-label="Page navigation example">
+  <ul class="pagination justify-content-center pagination-sm"
+      th:each="i : ${#numbers.sequence(0, totalPages)}">
+    <li class="page-item" th:classappend="${currentPage == i} ?'active'">
+      <a class="page-link" th:href="@{/loaidienthoai(pageNo=${i})}"
+         th:text="${i + 1}"></a>
+    </li>
+  </ul>
+</nav>
+<th:block th:replace="~{layout::footer}"></th:block>
+</body>
+</html>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <link rel="stylesheet" href="../static/css/style.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" type="text/css" href="/webjars/bootstrap/css/bootstrap.min.css" />
+  <script type="text/javascript" src="/webjars/jquery/jquery.min.js"></script>
+  <script type="text/javascript" src="/webjars/bootstrap/js/bootstrap.min.js"></script>
+  <!--    <th:block th:replace="~{layout::link-css}"></th:block>-->
+  <!--    <th:block th:replace="~{layout::custom-css}"></th:block>-->
+  <title>Add Loại điện thoại</title>
+</head>
+<body>
+<th:block th:replace="~{layout::header}"></th:block>
+<div class="container">
+  <h1>Thêm Loại điện thoại</h1>
+  <form th:action="@{/loaidienthoais/edit}" th:object="${loaidienthoai}" method="post">
+    <input type="hidden" th:field="*{id}">
+    <div class="col-6 mb-3">
+      <label class="form-label" for="tenLoai">Tên loại điện thoại:</label><span
+            class="text-danger">*</span>
+      <input class="form-control" type="text" placeholder="Enter tên loại điện thoại"
+             th:field="*{tenLoai}" id="tenLoai" required autofocus >
+      <span class="text-danger" th:if="${#fields.hasErrors('tenLoai')}"
+            th:errors="*{tenLoai}"></span>
+    </div>
+    <div class="col-6 mb-3">
+      <label class="form-label" for="trangThai"> Trạng thái:</label><span class="text-danger" style="margin-right: 20px;">*</span>
+      <input class="form-check-input" type="checkbox" th:field="*{trangThai}" id="trangThai">
+      <span class="text-danger" th:if="${#fields.hasErrors('trangThai')}" th:errors="*{trangThai}"></span>
+    </div>
+    <input type="submit" class="btn btn-primary" value="Save" />
+  </form>
+  <br>
+  <a th:href="@{/loaidienthoais}">Back to List</a>
+</div>
+<th:block th:replace="~{layout::footer}"></th:block>
+</body>
+</html>

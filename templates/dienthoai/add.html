@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <link rel="stylesheet" href="../static/css/style.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" type="text/css" href="/webjars/bootstrap/css/bootstrap.min.css" />
+  <script type="text/javascript" src="/webjars/jquery/jquery.min.js"></script>
+  <script type="text/javascript" src="/webjars/bootstrap/js/bootstrap.min.js"></script>
+  <!--    <th:block th:replace="~{layout::link-css}"></th:block>-->
+  <!--    <th:block th:replace="~{layout::custom-css}"></th:block>-->
+  <title>Add dienthoai</title>
+</head>
+<body>
+<th:block th:replace="~{layout::header}"></th:block>
+<div class="container">
+  <h1>Thêm điện thoại</h1>
+  <form th:action="@{/dienthoais/add}" th:object="${dienthoai}" method="post">
+    <div class="col-6 mb-3">
+      <label class="form-label" for="tenDienThoai">Tên điện thoại:</label><span
+            class="text-danger">*</span>
+      <input class="form-control" type="text" placeholder="Enter tên điện thoại"
+             th:field="*{tenDienThoai}" id="tenDienThoai" required autofocus >
+      <span class="text-danger" th:if="${#fields.hasErrors('tenDienThoai')}"
+            th:errors="*{tenDienThoai}"></span>
+    </div>
+    <div class="col-6 mb-3">
+      <label class="form-label" for="hinh">Hình:</label><span
+            class="text-danger">*</span>
+      <input class="form-control" type="text" placeholder="Enter hình"
+             th:field="*{hinh}" id="hinh" required autofocus >
+      <span class="text-danger" th:if="${#fields.hasErrors('hinh')}"
+            th:errors="*{hinh}"></span>
+    </div>
+    <div class="col-6 mb-3">
+      <label class="form-label" for="giaNhap">Giá nhập:</label>
+      <input class="form-control" type="text" th:field="*{giaNhap}"
+             id="giaNhap" placeholder="Enter giá nhập">
+      <span class="text-danger" th:if="${#fields.hasErrors('giaNhap')}"
+            th:errors="*{giaNhap}">*</span>
+    </div>
+    <div class="col-6 mb-3">
+      <label class="form-label" for="giaBan">Giá bán:</label><span
+            class="text-danger">*</span>
+      <input class="form-control" required type="text"
+             th:field="*{giaBan}" id="giaBan" placeholder="Enter giá bán">
+      <span class="text-danger" th:if="${#fields.hasErrors('giaBan')}"
+            th:errors="*{giaBan}"></span>
+    </div>
+    <div class="col-6 mb-3">
+      <label class="form-label" for="slTon">Số lượng tồn:</label><span
+            class="text-danger">*</span>
+      <input class="form-control" required type="text"
+             th:field="*{slTon}" id="slTon" placeholder="Enter số lượng tồn">
+      <span class="text-danger" th:if="${#fields.hasErrors('slTon')}"
+            th:errors="*{slTon}"></span>
+    </div>
+    <div class="col-6 mb-3">
+      <label class="form-label" for="moTa">Mô tả:</label><span
+            class="text-danger">*</span>
+      <input class="form-control" required type="text"
+             th:field="*{moTa}" id="moTa" placeholder="Enter mô tả">
+      <span class="text-danger" th:if="${#fields.hasErrors('moTa')}"
+            th:errors="*{moTa}"></span>
+    </div>
+    <div class="col-6 mb-3">
+      <label class="form-label" for="loaidienthoai">Category:</label><span
+            class="text-danger">*</span>
+      <select class="form-control" id="loaidienthoai" name="loaidienthoai.id">
+        <option value="">-- Select Category --</option>
+        <option th:each="loaidienthoai : ${loaidienthoais}"
+                th:value="${loaidienthoai.getId()}"
+                th:text="${loaidienthoai.getTenLoai()}"></option>
+      </select>
+      <span class="text-danger"
+            th:if="${#fields.hasErrors('loaidienthoai')}"
+            th:errors="*{loaidienthoai}"></span>
+    </div>
+    <div class="col-6 mb-3">
+      <label class="form-label" for="home">home:</label><span class="text-danger" style="margin-right: 20px;">*</span>
+      <input class="form-check-input" type="checkbox" th:field="*{home}" id="home">
+      <span class="text-danger" th:if="${#fields.hasErrors('home')}" th:errors="*{home}"></span>
+    </div>
+    <div class="col-6 mb-3">
+      <label class="form-label" for="noiBat">Nổi bật:</label><span class="text-danger" style="margin-right: 20px;">*</span>
+      <input class="form-check-input" type="checkbox" th:field="*{noiBat}" id="noiBat">
+      <span class="text-danger" th:if="${#fields.hasErrors('noiBat')}" th:errors="*{noiBat}"></span>
+    </div>
+    <div class="col-6 mb-3">
+      <label class="form-label" for="trangThai"> Trạng thái:</label><span class="text-danger" style="margin-right: 20px;">*</span>
+      <input class="form-check-input" type="checkbox" th:field="*{trangThai}" id="trangThai">
+      <span class="text-danger" th:if="${#fields.hasErrors('trangThai')}" th:errors="*{trangThai}"></span>
+    </div>
+
+    <input type="submit" class="btn btn-primary" value="Save" />
+  </form>
+  <br>
+  <a th:href="@{/dienthoais}">Back to List</a>
+</div>
+<th:block th:replace="~{layout::footer}"></th:block>
+</body>
+</html>

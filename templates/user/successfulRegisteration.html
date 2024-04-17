@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initialscale=1.0">
+  <!--  <th:block th:replace="~{layout::link-css}"></th:block>-->
+  <!--  <th:block th:replace="~{layout::custom-css}"></th:block>-->
+  <link rel="stylesheet" href="../static/css/style.css" />
+  <link rel="stylesheet" type="text/css" href="/webjars/bootstrap/css/bootstrap.min.css" />
+  <script type="text/javascript" src="/webjars/jquery/jquery.min.js"></script>
+  <script type="text/javascript" src="/webjars/bootstrap/js/bootstrap.min.js"></script>
+  <title>Registration Success</title>
+</head>
+<body>
+<th:block th:replace="~{layout::header}"></th:block>
+<center>
+  <h3 th:text="'A verification email has been sent to: ' + ${email}"></h3>
+  <a href="/login">Click here to login</a>
+</center>
+<th:block th:replace="~{layout::footer}"></th:block>
+</body>
+</html>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <link rel="stylesheet" href="../static/css/style.css"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" type="text/css" href="/webjars/bootstrap/css/bootstrap.min.css" />
+  <script type="text/javascript" src="/webjars/jquery/jquery.min.js"></script>
+  <script type="text/javascript" src="/webjars/bootstrap/js/bootstrap.min.js"></script>
+  <title>Chi tiết hóa đơn</title>
+  <style>
+    .left p{
+      width:100%;
+      margin-left: 30px;
+    }
+  </style>
+</head>
+<body>
+<th:block th:replace="~{layout :: header}"></th:block>
+<div class="row">
+  <div class="col-md-12">
+    <h2 class="text-center">Thông tin hóa đơn</h2>
+    <hr />
+    <div class="row">
+      <div class="col-md-6 left">
+        <p>Mã hóa đơn: <span th:text="${hoadon.getId()}"></span></p>
+        <p>Ngày lập: <span th:text="${hoadon.getNgayLap()}"></span></p>
+        <p>Tổng tiền: <span th:text="${#numbers.formatDecimal(hoadon.getDonGia(), 0, 'COMMA', 2, 'POINT')}"></span></p>
+      </div>
+      <div class="col-md-6">
+        <h3>Chi tiết hóa đơn:</h3>
+        <table class="table table-bordered">
+          <tr>
+            <th scope="col" class="text-center">Tên điện thoại</th>
+            <th scope="col" class="text-center">Số lượng</th>
+          </tr>
+          <tr th:each="cthd : ${cthdList}">
+            <td class="text-center" th:text="${cthd.dienthoai.tenDienThoai}"></td>
+            <td class="text-center" th:text="${cthd.soLuong}"></td>
+          </tr>
+
+        </table>
+      </div>
+
+    </div>
+  </div>
+</div>
+<br />
+<a class="btn btn-default" href="/hoadons">Quay lại</a>
+<th:block th:replace="~{layout :: footer}"></th:block>
+</body>
+</html>

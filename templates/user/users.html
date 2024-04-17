@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="../static/css/style.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="/webjars/bootstrap/css/bootstrap.min.css" />
+    <script type="text/javascript" src="/webjars/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="/webjars/bootstrap/js/bootstrap.min.js"></script>
+    <title>Danh sách User</title>
+</head>
+<body>
+<th:block th:replace="~{layout::header}"></th:block>
+<div class="container">
+    <th:block th:if="${role == 2}">
+        <button class="btn btn-primary" onclick="location.href='/registerNV'">Thêm nhân viên mới</button>
+    </th:block>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>username</th>
+            <th>email</th>
+            <th>phone</th>
+            <th>name</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="user : ${users}">
+            <td th:text="${user.getId()}"></td>
+            <td th:text="${user.getUsername()}"></td>
+            <td th:text="${user.getEmail()}"></td>
+            <td th:text="${user.getPhone()}"></td>
+            <td th:text="${user.getName()}"></td>
+<!--            <td colspan="2">-->
+<!--                <a class="btn btn-primary"-->
+<!--                   th:href="@{/users/edit/{id}(id=${user.getId()})}">Edit</a>-->
+<!--                <a class="btn btn-danger"-->
+<!--                   th:href="@{/users/delete/{id}(id=${user.getId()})}"-->
+<!--                   th:if="${user.getTrangThai() == false}"-->
+<!--                   onclick="return confirm('Are you sure you want to delete this user?')">Delete</a>-->
+<!--            </td>-->
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
