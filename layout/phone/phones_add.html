@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Phones API</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+    />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  </head>
+  <body>
+    <div class="container mt-5">
+      <h1 class="text-center mb-5">Phones API</h1>
+
+      <h2 class="mb-3">Add New Phone</h2>
+      <form id="addPhoneForm">
+        <div class="mb-3">
+          <label for="newPhoneName" class="form-label">Phone Name</label>
+          <input type="text" id="newPhoneName" class="form-control" />
+        </div>
+        <div class="mb-3">
+          <label for="newPhoneYear" class="form-label">Year</label>
+          <input type="number" id="newPhoneYear" class="form-control" />
+        </div>
+        <div class="mb-3">
+          <label for="newPhoneBrand" class="form-label">Brand</label>
+          <select id="newPhoneBrand" class="form-control"></select>
+        </div>
+        <button type="submit" class="btn btn-primary">Add Phone</button>
+      </form>
+    </div>
+
+    <script>
+      $(document).ready(function () {
+        $("#addPhoneForm").submit(addPhone);
+      });
+
+      window.onload = async function () {
+        await getBrands().then(populateBrandDropdown);
+      };
+
+      async function getBrands() {
+        const response = await $.ajax({
+          url: "http://localhost:3000/brands/",
+          method: "GET",
+        });
+        return response;
+      }
+
+      function populateBrandDropdown(brands) {
+        const brandSelect = $("#newPhoneBrand");
+        brandSelect.empty();
+        brands.forEach((brand) => {
+          const option = $("<option></option>")
+            .val(brand._id)
+            .text(brand.name);
+          brandSelect.append(option);
+        });
+      }
+
+      // Function to add new Phone
+      async function addPhone(event) {
+        event.preventDefault();
+        const name = $("#newPhoneName").val();
+        const year = $("#newPhoneYear").val();
+        const brandSelect = $("#newPhoneBrand");
+        const brandId = brandSelect.val();
+        const brandIdString = String(brandId);
+
+        console.log(brandIdString);
+
+        try {
+          const response = await $.ajax({
+            url: "http://localhost:3000/phones/",
+            method: "POST",
+            data: { name, year, brand: brandIdString },
+          });
+
+          $("#addedPhone").text(JSON.stringify(response, null, 2));
+          location.reload();
+        } catch (error) {
+          console.error("Error adding phone:", error);
+        }
+        window.location.href = "./phones_list.html";
+      }
+    </script>
+  </body>
+</html>

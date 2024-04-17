@@ -4,7 +4,7 @@ var brandModel = require('../schemas/brand')
 
 router.get('/', async function (req, res, next) {
   var brands = await brandModel.find({})
-  .populate('published').exec();
+  // .populate('published').exec();
   res.status(200).send(brands);
 });
 

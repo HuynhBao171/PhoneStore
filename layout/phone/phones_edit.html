@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Edit Phone</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+    />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  </head>
+  <body>
+    <div class="container mt-5">
+      <h1 class="text-center mb-5">Edit Phone</h1>
+
+      <button id="getPhoneById" class="btn btn-primary">Get Phone By ID</button>
+      <form id="editPhoneForm">
+        <input type="hidden" id="editPhoneId" name="id" />
+
+        <div class="input-group mb-3">
+          <label for="editPhoneName" class="input-group-text"
+            >New Phone Name</label
+          >
+          <input
+            type="text"
+            id="editPhoneName"
+            name="name"
+            class="form-control"
+          />
+        </div>
+
+        <div class="input-group mb-3">
+          <label for="editPhoneYear" class="input-group-text">New Year</label>
+          <input
+            type="number"
+            id="editPhoneYear"
+            name="year"
+            class="form-control"
+          />
+        </div>
+
+        <div class="mb-3">
+          <label for="newPhoneBrand" class="form-label">Brand</label>
+          <select id="newPhoneBrand" class="form-control"></select>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Update Phone</button>
+      </form>
+
+      <div id="updatedPhone" class="mt-3"></div>
+
+      <form action="./phones_list.html">
+        <button type="submit" class="btn btn-primary">Back Phone List</button>
+      </form>
+    </div>
+
+    <script>
+      $(document).ready(function () {
+        // Add event listener for the form submission
+        $("#editPhoneForm").submit(editPhone);
+      });
+
+      window.onload = async function () {
+        await getBrands().then(populateBrandDropdown);
+      };
+
+      async function getBrands() {
+        const response = await $.ajax({
+          url: "http://localhost:3000/brands/",
+          method: "GET",
+        });
+        return response;
+      }
+
+      function populateBrandDropdown(brands) {
+        const brandSelect = $("#newPhoneBrand");
+        brandSelect.empty();
+        brands.forEach((brand) => {
+          const option = $("<option></option>")
+            .val(brand._id)
+            .text(brand.name);
+          brandSelect.append(option);
+        });
+      }
+
+      // Function to edit a Phone
+      async function editPhone(event) {
+        event.preventDefault();
+        const id = $("#editPhoneId").val();
+        const name = $("#editPhoneName").val();
+        const year = $("#editPhoneYear").val();
+     
+        const brandSelect = $("#newPhoneBrand");
+        const brandId = brandSelect.val();
+        const brandIdString = String(brandId);
+
+        try {
+          const response = await $.ajax({
+            url: `http://localhost:3000/phones/${id}`,
+            method: "PUT",
+            data: { name, year, brand: brandIdString },
+          });
+
+          $("#updatedphone").text(JSON.stringify(response, null, 2));
+          // Redirect to the page displaying all phone
+          window.location.href = "phones_list.html";
+        } catch (error) {
+          console.error("Error editing Fishing Rod:", error);
+        }
+      }
+
+      // Function to populate the form with the existing phone data
+      function populateForm(phone) {
+        $("#editphoneId").val(phone._id);
+        $("#editphoneName").val(phone.name);
+        $("#editphoneYear").val(phone.year);
+        $("#editphoneBrand").val(phone.brand.name);
+      }
+
+      // Function to get a phone by ID and populate the form
+      function getPhoneById() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const id = urlParams.get("id");
+        console.log(id);
+
+        if (!id) {
+          alert("Missing Fishing Rod ID in URL");
+          return;
+        }
+
+        $.ajax({
+          url: `http://localhost:3000/phones/${id}`,
+          method: "GET",
+        })
+          .then((phone) => {
+            populateForm(phone);
+          })
+          .catch((error) => {
+            console.error("Error getting Fishing Rod:", error);
+            alert("Error getting Fishing Rod");
+          });
+      }
+
+      // Add event listener for the "Get phone By ID" button
+      $("#getPhoneById").click(getPhoneById);
+    </script>
+  </body>
+</html>
