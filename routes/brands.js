@@ -41,17 +41,17 @@ router.put('/:id', async function (req, res, next) {
   }
 });
 
-// router.delete('/:id', async function (req, res, next) {
-//   try {
-//     var brand = await brandModel.findByIdAndUpdate(req.params.id, {
-//       isDeleted: true
-//     },
-//       {
-//         new: true
-//       }).exec();
-//     res.status(200).send(brand);
-//   } catch (error) {
-//     res.status(404).send(error);
-//   }
-// });
+router.delete('/:id', async function (req, res, next) {
+  try {
+    var brand = await brandModel.findByIdAndUpdate(req.params.id, {
+      isDeleted: true
+    },
+      {
+        new: true
+      }).exec();
+    res.status(200).send(brand);
+  } catch (error) {
+    res.status(404).send(error);
+  }
+});
 module.exports = router;
