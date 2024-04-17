@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Phones API</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+    />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  </head>
+  <body>
+    <div class="container mt-5">
+      <h1 class="text-center mb-5">Phones API</h1>
+
+      <h2 class="mb-3">Get All Brands</h2>
+
+      <pre id="allBrands" class="mt-3">
+        <form action="./brands_add.html">
+          <button type="submit" class="btn btn-primary">Add Brand</button>
+        </form>
+        <div class="container">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Name</th>
+              </tr>
+            </thead>
+            <tbody id="brand-list"></tbody>
+          </table>
+          <!-- Add the pagination links here -->
+          <nav aria-label="Page navigation example" class="d-flex justify-content-center">
+            <ul class="pagination">
+              <li class="page-brand"><a class="page-link" href="#">1</a></li>
+              <li class="page-brand"><a class="page-link" href="#">2</a></li>
+              <li class="page-brand"><a class="page-link" href="#">3</a></li>
+            </ul>
+          </nav>
+        </div>
+      </pre>
+
+      <h2 class="mb-3">Get Brand By ID</h2>
+      <div class="input-group mb-3">
+        <input
+          type="text"
+          id="brandId"
+          class="form-control"
+          placeholder="Enter brand ID"
+        />
+        <button id="getbrandById" class="btn btn-primary">Get Brand By ID</button>
+      </div>
+      <pre id="brandById" class="mt-3"></pre>
+
+      <h2 class="mb-3">Add New Brand</h2>
+      <form id="addBrandForm">
+        <div class="mb-3">
+          <label for="newBrandName" class="form-label">Brand Name</label>
+          <input type="text" id="newBrandName" class="form-control" />
+        </div>
+        <button type="submit" class="btn btn-primary">Add Brand</button>
+      </form>
+      <div id="addedBrand" class="mt-3"></div>
+
+      <h2 class="mb-3">Update Brand</h2>
+      <div class="input-group mb-3">
+        <input
+          type="text"
+          id="updateBrandId"
+          class="form-control"
+          placeholder="Enter brand ID"
+        />
+      </div>
+      <div class="input-group mb-3">
+        <label for="updateBrandName" class="input-group-text"
+          >New Brand Name</label
+        >
+        <input type="text" id="updateBrandName" class="form-control" />
+      </div>
+      <button id="updateBrand" class="btn btn-primary">Update Brand</button>
+      <div id="updatedBrand" class="mt-3"></div>
+
+      <h2 class="mb-3">Delete Brand</h2>
+      <div class="input-group mb-3">
+        <input
+          type="text"
+          id="deleteBrandId"
+          class="form-control"
+          placeholder="Enter brand ID"
+        />
+        <button id="deleteBrand" class="btn btn-primary">Delete Brand</button>
+      </div>
+      <div id="deletedBrand" class="mt-3"></div>
+    </div>
+
+    <script>
+      $(document).ready(function () {
+        // Add event listeners for all buttons
+        //$("#getAllBrands").click(getAllBrands);
+        $("#getBrandById").click(getBrandById);
+        $("#addBrandForm").submit(addBrand);
+        $("#updateBrand").click(updateBrand);
+        $("#deleteBrand").click(deleteBrand);
+      });
+
+      window.onload = async function () {
+        const limit = 4;
+        const page = 1;
+        getAllBrands(limit, page);
+        //await getAllBrands();
+        await getBrands().then(populateBrandDropdown);
+      };
+
+      // Function to get all Brands
+      async function getAllBrands(limit, page) {
+        const response = await $.ajax({
+          url: `http://localhost:3000/brands`,
+          method: "GET",
+        });
+        const brands = response;
+        console.log(brands);
+        const brandList = document.getElementById("brand-list");
+
+        brandList.innerHTML = ""; // Clear the brand list before adding new brands
+
+        brands.forEach((brand) => {
+          const row = document.createElement("tr");
+          const nameCell = document.createElement("td");
+          const yearCell = document.createElement("td");
+          const brandCell = document.createElement("td");
+
+          nameCell.textContent = brand.name;
+          yearCell.textContent = brand.year;
+          brandCell.textContent = brand.brand.name;
+
+          row.appendChild(nameCell);
+          row.appendChild(yearCell);
+          row.appendChild(brandCell);
+
+          brandList.appendChild(row);
+        });
+      }
+
+      const pageLinks = document.querySelectorAll(".pagination .page-link");
+      pageLinks.forEach((link) => {
+        link.addEventListener("click", (e) => {
+          e.preventDefault();
+          const page = link.textContent;
+          getAllBrands(4, page);
+        });
+      });
+
+      // Function to get Brand by ID
+      async function getBrandById() {
+        const id = $("#brandId").val();
+        const response = await $.ajax({
+          url: `http://localhost:3000/brands/${id}`,
+          method: "GET",
+        });
+        $("#brandById").text(JSON.stringify(response, null, 2));
+      }
+
+      async function getBrands() {
+        const response = await $.ajax({
+          url: "http://localhost:3000/brands/",
+          method: "GET",
+        });
+        return response;
+      }
+      
+
+      // Function to add new Brand
+      async function addBrand(event) {
+        event.preventDefault();
+        const name = $("#newBrandName").val();
+        const year = $("#newBrandYear").val();
+        const brandSelect = $("#newBrandBrand");
+        const brandId = brandSelect.val();
+        const brandIdString = String(brandId);
+
+        console.log(brandIdString);
+
+        try {
+          const response = await $.ajax({
+            url: "http://localhost:3000/brands/",
+            method: "POST",
+            data: { name, year, brand: brandIdString },
+          });
+
+          $("#addedBrand").text(JSON.stringify(response, null, 2));
+          location.reload();
+        } catch (error) {
+          console.error("Error adding Brand:", error);
+        }
+      }
+
+      // Function to update Brand
+      async function updateBrand() {
+        const id = $("#updateBrandId").val();
+        const name = $("#updateBrandName").val();
+        const year = $("#updateBrandYear").val();
+        const brand = $("#updateBrandBrand").val();
+        const response = await $.ajax({
+          url: `http://localhost:3000/brands/${id}`,
+          method: "PUT",
+          data: { name, year, brand },
+        });
+        $("#updatedBrand").text(JSON.stringify(response, null, 2));
+        location.reload();
+      }
+
+      // Function to delete Brand
+      async function deleteBrand() {
+        const id = $("#deleteBrandId").val();
+        const response = await $.ajax({
+          url: `http://localhost:3000/brands/${id}`,
+          method: "DELETE",
+        });
+        $("#deletedBrand").text(JSON.stringify(response, null, 2));
+        location.reload();
+      }
+
+      // call the function to populate the dropdown list
+    </script>
+  </body>
+</html>
