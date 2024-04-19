@@ -17,9 +17,6 @@
       <h2 class="mb-3">Get All Brands</h2>
 
       <pre id="allBrands" class="mt-3">
-        <form action="./brands_add.html">
-          <button type="submit" class="btn btn-primary">Add Brand</button>
-        </form>
         <div class="container">
           <table class="table">
             <thead>
@@ -48,7 +45,9 @@
           class="form-control"
           placeholder="Enter brand ID"
         />
-        <button id="getbrandById" class="btn btn-primary">Get Brand By ID</button>
+        <button id="getbrandById" class="btn btn-primary">
+          Get Brand By ID
+        </button>
       </div>
       <pre id="brandById" class="mt-3"></pre>
 
@@ -126,16 +125,10 @@
         brands.forEach((brand) => {
           const row = document.createElement("tr");
           const nameCell = document.createElement("td");
-          const yearCell = document.createElement("td");
-          const brandCell = document.createElement("td");
 
           nameCell.textContent = brand.name;
-          yearCell.textContent = brand.year;
-          brandCell.textContent = brand.brand.name;
 
           row.appendChild(nameCell);
-          row.appendChild(yearCell);
-          row.appendChild(brandCell);
 
           brandList.appendChild(row);
         });
@@ -153,11 +146,19 @@
       // Function to get Brand by ID
       async function getBrandById() {
         const id = $("#brandId").val();
-        const response = await $.ajax({
-          url: `http://localhost:3000/brands/${id}`,
-          method: "GET",
-        });
-        $("#brandById").text(JSON.stringify(response, null, 2));
+        try {
+          const response = await $.ajax({
+            url: `http://localhost:3000/brands/${id}`,
+            method: "GET",
+          });
+          $("#brandById").text(JSON.stringify(response, null, 2));
+
+          // Hiển thị hộp thoại cảnh báo khi thành công
+          alert("Lấy thông tin thương hiệu thành công!");
+        } catch (error) {
+          console.error("Lỗi khi lấy thông tin thương hiệu:", error);
+          alert("Đã xảy ra lỗi khi lấy thông tin thương hiệu.");
+        }
       }
 
       async function getBrands() {
@@ -167,7 +168,6 @@
         });
         return response;
       }
-      
 
       // Function to add new Brand
       async function addBrand(event) {
@@ -189,8 +189,12 @@
 
           $("#addedBrand").text(JSON.stringify(response, null, 2));
           location.reload();
+
+          // Hiển thị hộp thoại cảnh báo khi thành công
+          alert("Thêm thương hiệu mới thành công!");
         } catch (error) {
-          console.error("Error adding Brand:", error);
+          console.error("Lỗi khi thêm thương hiệu mới:", error);
+          alert("Đã xảy ra lỗi khi thêm thương hiệu mới.");
         }
       }
 
@@ -200,24 +204,47 @@
         const name = $("#updateBrandName").val();
         const year = $("#updateBrandYear").val();
         const brand = $("#updateBrandBrand").val();
-        const response = await $.ajax({
-          url: `http://localhost:3000/brands/${id}`,
-          method: "PUT",
-          data: { name, year, brand },
-        });
-        $("#updatedBrand").text(JSON.stringify(response, null, 2));
-        location.reload();
+        try {
+          const response = await $.ajax({
+            url: `http://localhost:3000/brands/${id}`,
+            method: "PUT",
+            data: { name, year, brand },
+          });
+          $("#updatedBrand").text(JSON.stringify(response, null, 2));
+          location.reload();
+
+          // Hiển thị hộp thoại cảnh báo khi thành công
+          alert("Cập nhật thông tin thương hiệu thành công!");
+        } catch (error) {
+          console.error("Lỗi khi cập nhật thông tin thương hiệu:", error);
+          alert("Đã xảy ra lỗi khi cập nhật thông tin thương hiệu.");
+        }
       }
 
       // Function to delete Brand
       async function deleteBrand() {
         const id = $("#deleteBrandId").val();
-        const response = await $.ajax({
-          url: `http://localhost:3000/brands/${id}`,
-          method: "DELETE",
-        });
-        $("#deletedBrand").text(JSON.stringify(response, null, 2));
-        location.reload();
+        try {
+          const response = await $.ajax({
+            url: `http://localhost:3000/brands/${id}`,
+            method: "DELETE",
+          });
+
+          // Kiểm tra trường "isDeleted" trong phản hồi
+          if (response && response.isDeleted === true) {
+            // Hiển thị hộp thoại cảnh báo khi thành công
+            alert("Xóa thương hiệu thành công!");
+          } else {
+            // Hiển thị hộp thoại cảnh báo khi không thành công
+            alert("Xóa thương hiệu không thành công.");
+          }
+
+          $("#deletedBrand").text(JSON.stringify(response, null, 2));
+          location.reload();
+        } catch (error) {
+          console.error("Lỗi khi xóa thương hiệu:", error);
+          alert("Đã xảy ra lỗi khi xóa thương hiệu.");
+        }
       }
 
       // call the function to populate the dropdown list
