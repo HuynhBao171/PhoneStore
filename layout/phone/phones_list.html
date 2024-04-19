@@ -29,6 +29,7 @@
           <table class="table">
             <thead class="thead-dark">
               <tr>
+                <th>ID</th>
                 <th>Name</th>
                 <th>Year</th>
                 <th>Brand</th>
@@ -79,6 +80,7 @@
           const row = document.createElement("tr");
           console.log(phone._id);
           row.setAttribute("data-phone-id", phone._id);
+          const idCell = document.createElement("td");
           const nameCell = document.createElement("td");
           const yearCell = document.createElement("td");
           const brandCell = document.createElement("td");
@@ -87,6 +89,8 @@
           const editCell = document.createElement("td");
           const editButton = document.createElement("button");
 
+          idCell.textContent = phone._id;
+          idCell.className = "align-middle";
           nameCell.textContent = phone.name;
           nameCell.className = "align-middle";
           yearCell.textContent = phone.year;
@@ -109,6 +113,7 @@
 
           deleteCell.appendChild(deleteButton);
           editCell.appendChild(editButton);
+          row.appendChild(idCell);
           row.appendChild(nameCell);
           row.appendChild(yearCell);
           row.appendChild(brandCell);
