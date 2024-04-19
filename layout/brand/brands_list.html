@@ -12,126 +12,122 @@
   </head>
   <body>
     <div class="container mt-5">
+      <form action="./brands_add.html">
+        <button type="submit" class="btn btn-primary">Add Brand</button>
+      </form>
       <h1 class="text-center mb-5">Phones API</h1>
 
       <h2 class="mb-3">Get All Brands</h2>
 
-      <pre id="allBrands" class="mt-3">
-        <div class="container">
+      <div class="container mt-3">
+        <div class="table-responsive">
           <table class="table">
-            <thead>
+            <thead class="thead-dark">
               <tr>
+                <th>ID</th>
                 <th>Name</th>
               </tr>
             </thead>
             <tbody id="brand-list"></tbody>
           </table>
-          <!-- Add the pagination links here -->
-          <nav aria-label="Page navigation example" class="d-flex justify-content-center">
-            <ul class="pagination">
-              <li class="page-brand"><a class="page-link" href="#">1</a></li>
-              <li class="page-brand"><a class="page-link" href="#">2</a></li>
-              <li class="page-brand"><a class="page-link" href="#">3</a></li>
-            </ul>
-          </nav>
+          <form action="../phone/phones_list.html">
+            <button type="submit" class="btn btn-primary">Back Phone List</button>
+          </form>
         </div>
-      </pre>
-
-      <h2 class="mb-3">Get Brand By ID</h2>
-      <div class="input-group mb-3">
-        <input
-          type="text"
-          id="brandId"
-          class="form-control"
-          placeholder="Enter brand ID"
-        />
-        <button id="getbrandById" class="btn btn-primary">
-          Get Brand By ID
-        </button>
+        <!-- Add the pagination links here -->
+        <nav aria-label="Page navigation" class="d-flex justify-content-center">
+          <ul class="pagination">
+            <li class="page-item"><a class="page-link" href="#">1</a></li>
+            <li class="page-item"><a class="page-link" href="#">2</a></li>
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+          </ul>
+        </nav>
       </div>
-      <pre id="brandById" class="mt-3"></pre>
-
-      <h2 class="mb-3">Add New Brand</h2>
-      <form id="addBrandForm">
-        <div class="mb-3">
-          <label for="newBrandName" class="form-label">Brand Name</label>
-          <input type="text" id="newBrandName" class="form-control" />
-        </div>
-        <button type="submit" class="btn btn-primary">Add Brand</button>
-      </form>
-      <div id="addedBrand" class="mt-3"></div>
-
-      <h2 class="mb-3">Update Brand</h2>
-      <div class="input-group mb-3">
-        <input
-          type="text"
-          id="updateBrandId"
-          class="form-control"
-          placeholder="Enter brand ID"
-        />
-      </div>
-      <div class="input-group mb-3">
-        <label for="updateBrandName" class="input-group-text"
-          >New Brand Name</label
-        >
-        <input type="text" id="updateBrandName" class="form-control" />
-      </div>
-      <button id="updateBrand" class="btn btn-primary">Update Brand</button>
-      <div id="updatedBrand" class="mt-3"></div>
-
-      <h2 class="mb-3">Delete Brand</h2>
-      <div class="input-group mb-3">
-        <input
-          type="text"
-          id="deleteBrandId"
-          class="form-control"
-          placeholder="Enter brand ID"
-        />
-        <button id="deleteBrand" class="btn btn-primary">Delete Brand</button>
-      </div>
-      <div id="deletedBrand" class="mt-3"></div>
-    </div>
-
     <script>
       $(document).ready(function () {
         // Add event listeners for all buttons
         //$("#getAllBrands").click(getAllBrands);
         $("#getBrandById").click(getBrandById);
-        $("#addBrandForm").submit(addBrand);
+        // $("#addBrandForm").submit(addBrand);
         $("#updateBrand").click(updateBrand);
-        $("#deleteBrand").click(deleteBrand);
       });
 
       window.onload = async function () {
         const limit = 4;
         const page = 1;
         getAllBrands(limit, page);
-        //await getAllBrands();
-        await getBrands().then(populateBrandDropdown);
+
+        //await getBrands().then(populateBrandDropdown);
       };
 
       // Function to get all Brands
       async function getAllBrands(limit, page) {
         const response = await $.ajax({
-          url: `http://localhost:3000/brands`,
+          url: `http://localhost:3000/brands/?limit=${limit}&page=${page}`,
           method: "GET",
         });
         const brands = response;
         console.log(brands);
         const brandList = document.getElementById("brand-list");
 
-        brandList.innerHTML = ""; // Clear the brand list before adding new brands
+        brandList.innerHTML = "";
 
         brands.forEach((brand) => {
           const row = document.createElement("tr");
+          console.log(brand._id);
+          row.setAttribute("data-brand-id", brand._id);
+          const idCell = document.createElement("td");
           const nameCell = document.createElement("td");
+          const deleteCell = document.createElement("td");
+          const deleteButton = document.createElement("button");
+          const editCell = document.createElement("td");
+          const editButton = document.createElement("button");
 
+          idCell.textContent = brand._id;
+          idCell.className = "align-middle";
           nameCell.textContent = brand.name;
+          nameCell.className = "align-middle";
+          deleteButton.textContent = "Delete";
+          deleteButton.className = "btn btn-danger";
+          editButton.textContent = "Edit";
+          editButton.className = "btn btn-info";
 
+          // Add an event listener to the delete button
+          deleteButton.addEventListener("click", () => {
+            deleteBrand(brand._id);
+          });
+
+          editButton.addEventListener("click", () => {
+            editBrand(brand._id);
+          });
+
+          deleteCell.appendChild(deleteButton);
+          editCell.appendChild(editButton);
+          row.appendChild(idCell);
           row.appendChild(nameCell);
+          row.appendChild(deleteCell);
+          row.appendChild(editCell);
 
           brandList.appendChild(row);
         });
+      }
+
+      function editBrand(id) {
+        window.location.href = `./brands_edit.html?id=${id}`;
+      }
+
+      async function deleteBrand(id) {
+        // Send a DELETE request to the server to delete the brand with the given ID
+        await $.ajax({
+          url: `http://localhost:3000/brands/${id}`,
+          method: "DELETE",
+        });
+
+        // Remove the row from the table
+        const rowToRemove = document.querySelector(`tr[data-brand-id="${id}"]`);
+        if (rowToRemove) {
+          rowToRemove.remove();
+        }
       }
 
       const pageLinks = document.querySelectorAll(".pagination .page-link");
@@ -139,115 +135,20 @@
         link.addEventListener("click", (e) => {
           e.preventDefault();
           const page = link.textContent;
-          getAllBrands(4, page);
+          getAllbrands(4, page);
         });
       });
 
-      // Function to get Brand by ID
+      // Function to get brand by ID
       async function getBrandById() {
         const id = $("#brandId").val();
-        try {
-          const response = await $.ajax({
-            url: `http://localhost:3000/brands/${id}`,
-            method: "GET",
-          });
-          $("#brandById").text(JSON.stringify(response, null, 2));
-
-          // Hiển thị hộp thoại cảnh báo khi thành công
-          alert("Lấy thông tin thương hiệu thành công!");
-        } catch (error) {
-          console.error("Lỗi khi lấy thông tin thương hiệu:", error);
-          alert("Đã xảy ra lỗi khi lấy thông tin thương hiệu.");
-        }
-      }
-
-      async function getBrands() {
         const response = await $.ajax({
-          url: "http://localhost:3000/brands/",
+          url: `http://localhost:3000/brands/${id}`,
           method: "GET",
         });
-        return response;
+        $("#brandById").text(JSON.stringify(response, null, 2));
       }
 
-      // Function to add new Brand
-      async function addBrand(event) {
-        event.preventDefault();
-        const name = $("#newBrandName").val();
-        const year = $("#newBrandYear").val();
-        const brandSelect = $("#newBrandBrand");
-        const brandId = brandSelect.val();
-        const brandIdString = String(brandId);
-
-        console.log(brandIdString);
-
-        try {
-          const response = await $.ajax({
-            url: "http://localhost:3000/brands/",
-            method: "POST",
-            data: { name, year, brand: brandIdString },
-          });
-
-          $("#addedBrand").text(JSON.stringify(response, null, 2));
-          location.reload();
-
-          // Hiển thị hộp thoại cảnh báo khi thành công
-          alert("Thêm thương hiệu mới thành công!");
-        } catch (error) {
-          console.error("Lỗi khi thêm thương hiệu mới:", error);
-          alert("Đã xảy ra lỗi khi thêm thương hiệu mới.");
-        }
-      }
-
-      // Function to update Brand
-      async function updateBrand() {
-        const id = $("#updateBrandId").val();
-        const name = $("#updateBrandName").val();
-        const year = $("#updateBrandYear").val();
-        const brand = $("#updateBrandBrand").val();
-        try {
-          const response = await $.ajax({
-            url: `http://localhost:3000/brands/${id}`,
-            method: "PUT",
-            data: { name, year, brand },
-          });
-          $("#updatedBrand").text(JSON.stringify(response, null, 2));
-          location.reload();
-
-          // Hiển thị hộp thoại cảnh báo khi thành công
-          alert("Cập nhật thông tin thương hiệu thành công!");
-        } catch (error) {
-          console.error("Lỗi khi cập nhật thông tin thương hiệu:", error);
-          alert("Đã xảy ra lỗi khi cập nhật thông tin thương hiệu.");
-        }
-      }
-
-      // Function to delete Brand
-      async function deleteBrand() {
-        const id = $("#deleteBrandId").val();
-        try {
-          const response = await $.ajax({
-            url: `http://localhost:3000/brands/${id}`,
-            method: "DELETE",
-          });
-
-          // Kiểm tra trường "isDeleted" trong phản hồi
-          if (response && response.isDeleted === true) {
-            // Hiển thị hộp thoại cảnh báo khi thành công
-            alert("Xóa thương hiệu thành công!");
-          } else {
-            // Hiển thị hộp thoại cảnh báo khi không thành công
-            alert("Xóa thương hiệu không thành công.");
-          }
-
-          $("#deletedBrand").text(JSON.stringify(response, null, 2));
-          location.reload();
-        } catch (error) {
-          console.error("Lỗi khi xóa thương hiệu:", error);
-          alert("Đã xảy ra lỗi khi xóa thương hiệu.");
-        }
-      }
-
-      // call the function to populate the dropdown list
     </script>
   </body>
 </html>

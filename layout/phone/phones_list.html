@@ -12,18 +12,22 @@
   </head>
   <body>
     <div class="container mt-5">
+      <div>
+        <form action="../brand/brands_list.html" class="d-inline-block">
+          <button type="submit" class="btn btn-primary">Brand List</button>
+        </form>
+        <form action="./phones_add.html" class="d-inline-block ml-2">
+          <button type="submit" class="btn btn-primary">Add Phone</button>
+        </form>
+      </div>
       <h1 class="text-center mb-5">Phones API</h1>
-
-      <form action="../brand/brands_list.html">
-        <button type="submit" class="btn btn-primary">All brand</button>
-      </form>
 
       <h2 class="mb-3">Get All Phones</h2>
 
-      <pre id="allPhones" class="mt-3">
-        <div class="container">
+      <div class="container mt-3">
+        <div class="table-responsive">
           <table class="table">
-            <thead>
+            <thead class="thead-dark">
               <tr>
                 <th>Name</th>
                 <th>Year</th>
@@ -32,104 +36,31 @@
             </thead>
             <tbody id="phone-list"></tbody>
           </table>
-          <!-- Add the pagination links here -->
-          <nav aria-label="Page navigation example" class="d-flex justify-content-center">
-            <ul class="pagination">
-              <li class="page-phone"><a class="page-link" href="#">1</a></li>
-              <li class="page-phone"><a class="page-link" href="#">2</a></li>
-              <li class="page-phone"><a class="page-link" href="#">3</a></li>
-            </ul>
-          </nav>
         </div>
-      </pre>
-
-      <h2 class="mb-3">Get Phone By ID</h2>
-      <div class="input-group mb-3">
-        <input
-          type="text"
-          id="phoneId"
-          class="form-control"
-          placeholder="Enter phone ID"
-        />
-        <button id="getphoneById" class="btn btn-primary">Get Phone By ID</button>
+        <!-- Add the pagination links here -->
+        <nav aria-label="Page navigation" class="d-flex justify-content-center">
+          <ul class="pagination">
+            <li class="page-item"><a class="page-link" href="#">1</a></li>
+            <li class="page-item"><a class="page-link" href="#">2</a></li>
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+          </ul>
+        </nav>
       </div>
-      <pre id="phoneById" class="mt-3"></pre>
-
-      <h2 class="mb-3">Add New Phone</h2>
-      <form id="addPhoneForm">
-        <div class="mb-3">
-          <label for="newPhoneName" class="form-label">Phone Name</label>
-          <input type="text" id="newPhoneName" class="form-control" />
-        </div>
-        <div class="mb-3">
-          <label for="newPhoneYear" class="form-label">Year</label>
-          <input type="number" id="newPhoneYear" class="form-control" />
-        </div>
-        <div class="mb-3">
-          <label for="newPhoneBrand" class="form-label">Brand</label>
-          <select id="newPhoneBrand" class="form-control"></select>
-        </div>
-        <button type="submit" class="btn btn-primary">Add Phone</button>
-      </form>
-      <div id="addedPhone" class="mt-3"></div>
-
-      <h2 class="mb-3">Update Phone</h2>
-      <div class="input-group mb-3">
-        <input
-          type="text"
-          id="updatePhoneId"
-          class="form-control"
-          placeholder="Enter phone ID"
-        />
-      </div>
-      <div class="input-group mb-3">
-        <label for="updatePhoneName" class="input-group-text"
-          >New Phone Name</label
-        >
-        <input type="text" id="updatePhoneName" class="form-control" />
-      </div>
-      <div class="input-group mb-3">
-        <label for="updatePhoneYear" class="input-group-text">New Year</label>
-        <input type="number" id="updatePhoneYear" class="form-control" />
-      </div>
-      <div class="input-group mb-3">
-        <label for="updatePhoneBrand" class="input-group-text"
-          >New Brand</label
-        >
-        <input type="text" id="updatePhoneBrand" class="form-control" />
-      </div>
-      <button id="updatePhone" class="btn btn-primary">Update Phone</button>
-      <div id="updatedPhone" class="mt-3"></div>
-
-      <h2 class="mb-3">Delete Phone</h2>
-      <div class="input-group mb-3">
-        <input
-          type="text"
-          id="deletePhoneId"
-          class="form-control"
-          placeholder="Enter phone ID"
-        />
-        <button id="deletePhone" class="btn btn-primary">Delete Phone</button>
-      </div>
-      <div id="deletedPhone" class="mt-3"></div>
-    </div>
-
     <script>
       $(document).ready(function () {
         // Add event listeners for all buttons
         //$("#getAllPhones").click(getAllPhones);
         $("#getPhoneById").click(getPhoneById);
-        $("#addPhoneForm").submit(addPhone);
+        // $("#addPhoneForm").submit(addPhone);
         $("#updatePhone").click(updatePhone);
-        $("#deletePhone").click(deletePhone);
       });
 
       window.onload = async function () {
         const limit = 4;
         const page = 1;
         getAllPhones(limit, page);
-        //await getAllPhones();
-        await getBrands().then(populateBrandDropdown);
+
+        //await getBrands().then(populateBrandDropdown);
       };
 
       // Function to get all Phones
@@ -142,24 +73,68 @@
         console.log(phones);
         const phoneList = document.getElementById("phone-list");
 
-        phoneList.innerHTML = ""; // Clear the phone list before adding new phones
+        phoneList.innerHTML = "";
 
         phones.forEach((phone) => {
           const row = document.createElement("tr");
+          console.log(phone._id);
+          row.setAttribute("data-phone-id", phone._id);
           const nameCell = document.createElement("td");
           const yearCell = document.createElement("td");
           const brandCell = document.createElement("td");
+          const deleteCell = document.createElement("td");
+          const deleteButton = document.createElement("button");
+          const editCell = document.createElement("td");
+          const editButton = document.createElement("button");
 
           nameCell.textContent = phone.name;
+          nameCell.className = "align-middle";
           yearCell.textContent = phone.year;
+          yearCell.className = "align-middle";
           brandCell.textContent = phone.brand.name;
+          brandCell.className = "align-middle";
+          deleteButton.textContent = "Delete";
+          deleteButton.className = "btn btn-danger";
+          editButton.textContent = "Edit";
+          editButton.className = "btn btn-info";
 
+          // Add an event listener to the delete button
+          deleteButton.addEventListener("click", () => {
+            deletePhone(phone._id);
+          });
+
+          editButton.addEventListener("click", () => {
+            editPhone(phone._id);
+          });
+
+          deleteCell.appendChild(deleteButton);
+          editCell.appendChild(editButton);
           row.appendChild(nameCell);
           row.appendChild(yearCell);
           row.appendChild(brandCell);
+          row.appendChild(deleteCell);
+          row.appendChild(editCell);
 
           phoneList.appendChild(row);
         });
+      }
+
+      function editPhone(id) {
+        window.location.href = `./phones_edit.html?id=${id}`;
+      }
+
+      async function deletePhone(id) {
+        // Send a DELETE request to the server to delete the phone with the given ID
+        await $.ajax({
+          url: `http://localhost:3000/phones/${id}`,
+          method: "DELETE",
+        });
+
+        // Remove the row from the table
+        const rowToRemove = document.querySelector(`tr[data-phone-id="${id}"]`);
+        if (rowToRemove) {
+          rowToRemove.remove();
+        }
       }
 
       const pageLinks = document.querySelectorAll(".pagination .page-link");
@@ -181,77 +156,6 @@
         $("#phoneById").text(JSON.stringify(response, null, 2));
       }
 
-      async function getBrands() {
-        const response = await $.ajax({
-          url: "http://localhost:3000/brands/",
-          method: "GET",
-        });
-        return response;
-      }
-
-      function populateBrandDropdown(brands) {
-        const brandSelect = $("#newPhoneBrand");
-        brandSelect.empty();
-        brands.forEach((brand) => {
-          const option = $("<option></option>")
-            .val(brand._id)
-            .text(brand.name);
-          brandSelect.append(option);
-        });
-      }
-
-      // Function to add new Phone
-      async function addPhone(event) {
-        event.preventDefault();
-        const name = $("#newPhoneName").val();
-        const year = $("#newPhoneYear").val();
-        const brandSelect = $("#newPhoneBrand");
-        const brandId = brandSelect.val();
-        const brandIdString = String(brandId);
-
-        console.log(brandIdString);
-
-        try {
-          const response = await $.ajax({
-            url: "http://localhost:3000/phones/",
-            method: "POST",
-            data: { name, year, brand: brandIdString },
-          });
-
-          $("#addedPhone").text(JSON.stringify(response, null, 2));
-          location.reload();
-        } catch (error) {
-          console.error("Error adding Phone:", error);
-        }
-      }
-
-      // Function to update Phone
-      async function updatePhone() {
-        const id = $("#updatePhoneId").val();
-        const name = $("#updatePhoneName").val();
-        const year = $("#updatePhoneYear").val();
-        const brand = $("#updatePhoneBrand").val();
-        const response = await $.ajax({
-          url: `http://localhost:3000/phones/${id}`,
-          method: "PUT",
-          data: { name, year, brand },
-        });
-        $("#updatedPhone").text(JSON.stringify(response, null, 2));
-        location.reload();
-      }
-
-      // Function to delete Phone
-      async function deletePhone() {
-        const id = $("#deletePhoneId").val();
-        const response = await $.ajax({
-          url: `http://localhost:3000/phones/${id}`,
-          method: "DELETE",
-        });
-        $("#deletedPhone").text(JSON.stringify(response, null, 2));
-        location.reload();
-      }
-
-      // call the function to populate the dropdown list
     </script>
   </body>
 </html>

@@ -41,8 +41,8 @@
         </div>
 
         <div class="mb-3">
-          <label for="newPhoneBrand" class="form-label">Brand</label>
-          <select id="newPhoneBrand" class="form-control"></select>
+          <label for="editPhoneBrand" class="form-label">Brand</label>
+          <select id="editPhoneBrand" class="form-control"></select>
         </div>
 
         <button type="submit" class="btn btn-primary">Update Phone</button>
@@ -74,7 +74,7 @@
       }
 
       function populateBrandDropdown(brands) {
-        const brandSelect = $("#newPhoneBrand");
+        const brandSelect = $("#editPhoneBrand");
         brandSelect.empty();
         brands.forEach((brand) => {
           const option = $("<option></option>")
@@ -84,14 +84,14 @@
         });
       }
 
-      // Function to edit a Phone
+      // Function to edit a phone
       async function editPhone(event) {
         event.preventDefault();
         const id = $("#editPhoneId").val();
         const name = $("#editPhoneName").val();
         const year = $("#editPhoneYear").val();
-     
-        const brandSelect = $("#newPhoneBrand");
+        //const brand = $("#editPhoneBrand").val();
+        const brandSelect = $("#editPhoneBrand");
         const brandId = brandSelect.val();
         const brandIdString = String(brandId);
 
@@ -102,20 +102,22 @@
             data: { name, year, brand: brandIdString },
           });
 
-          $("#updatedphone").text(JSON.stringify(response, null, 2));
-          // Redirect to the page displaying all phone
+          $("#updatedPhone").text(JSON.stringify(response, null, 2));
+          // Redirect to the page displaying all phones
           window.location.href = "phones_list.html";
+          alert("Sửa thông tin điện thoại thành công.");
         } catch (error) {
-          console.error("Error editing Fishing Rod:", error);
+          alert("Thêm điện thoại mới không thành công.");
+          console.error("Error editing phone:", error);
         }
       }
 
       // Function to populate the form with the existing phone data
       function populateForm(phone) {
-        $("#editphoneId").val(phone._id);
-        $("#editphoneName").val(phone.name);
-        $("#editphoneYear").val(phone.year);
-        $("#editphoneBrand").val(phone.brand.name);
+        $("#editPhoneId").val(phone._id);
+        $("#editPhoneName").val(phone.name);
+        $("#editPhoneYear").val(phone.year);
+        $("#editPhoneBrand").val(phone.brand.name);
       }
 
       // Function to get a phone by ID and populate the form
@@ -125,7 +127,7 @@
         console.log(id);
 
         if (!id) {
-          alert("Missing Fishing Rod ID in URL");
+          alert("Missing phone ID in URL");
           return;
         }
 
@@ -137,12 +139,12 @@
             populateForm(phone);
           })
           .catch((error) => {
-            console.error("Error getting Fishing Rod:", error);
-            alert("Error getting Fishing Rod");
+            console.error("Error getting phone:", error);
+            alert("Error getting phone");
           });
       }
 
-      // Add event listener for the "Get phone By ID" button
+      // Add event listener for the "Get Phone By ID" button
       $("#getPhoneById").click(getPhoneById);
     </script>
   </body>
